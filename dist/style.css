@@ -1,0 +1,90 @@
+body {
+    margin: 0;
+}
+
+ul {
+    padding-inline-start: 0;
+}
+
+li {
+    text-decoration: none;
+    list-style: none;
+
+}
+
+.content {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: 1fr 4fr;
+    grid-template-rows: 1fr;
+}
+
+.lists-div,
+.current-list-display {
+    padding-top: 2rem;
+}
+
+.lists-div {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    height: 100vh;
+    background-color: rgba(128, 128, 128, .1);
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+.list {
+    display: grid;
+    grid-template-columns: 4fr 1fr;
+    grid-auto-rows: auto;
+    justify-items: start;
+    padding-left: 1rem;
+}
+
+.add-project-button {
+    margin-top: 3rem;
+    font-size: 3rem;
+}
+
+#project-input {
+    align-self: center;
+    font-size: 1.25rem;
+    height: 2rem;
+    width: 50%;
+    margin-top: 1rem;
+}
+
+.active-project {
+    background-color: rgba(128, 128, 128, .3);
+}
+
+.current-list-display {
+    display: flex;
+    padding-left: 10%;
+    padding-right: 10%;
+}
+
+.list-content {
+    width: 100%;
+}
+
+.list-header-div h2 {
+    display: inline-block;
+    margin-right: 2rem;
+}
+
+.add-list-item-button {
+    font-size: 1.25rem;
+}
+
+.list-item {
+    font-size: 1.25rem;
+    padding: .75rem 0;
+    border-bottom: 1px solid rgba(128, 128, 128, .3);
+}
+
+.list-item-delete-button {
+    margin-right: 1rem;
+}
