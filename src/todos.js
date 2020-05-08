@@ -14,11 +14,8 @@ let createTodo = (newTask) => {
     }
 }
 
-let deleteTodo = (event, array) => {
-    array.splice(event.id, 1);
-}
+
 
 export {
     createTodo,
-    deleteTodo
 }

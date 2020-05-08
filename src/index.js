@@ -5,25 +5,24 @@ import {
 
 import {
     createTodo,
-    deleteTodo
 } from './todos.js';
 
 import {
     createNewProject,
-    deleteProject
 } from './projects.js';
 
 import {
     activateProject,
     findActiveProject,
-    clearActiveProjectStyle
+    clearActiveProjectStyle,
+    removeItem
+
 } from './helper-functions.js';
 
 let projects = [];
 let currentList = document.querySelector('.current-list');
 let addTodoButton = document.querySelector('.add-list-item-button');
 let addProjectButton = document.querySelector('.add-project-button');
-
 let projectsList = document.querySelector('.lists');
 
 let addNewTodo = () => {
@@ -34,6 +33,8 @@ let addNewTodo = () => {
     items.push(newTodo);
     taskInput.value = '';
     updateTodoList(items);
+
+    updateStorage();
 }
 
 let addNewProject = () => {
@@ -41,7 +42,30 @@ let addNewProject = () => {
     let newProject = createNewProject(projectNameIput.value);
     projects.push(newProject);
     updateProjectsList(projects);
+    updateStorage();
 }
+
+let loadStorage = () => {
+    if (localStorage.getItem('projects') && localStorage.getItem('projects') !== '[]') {
+        let retrievedData = localStorage.getItem('projects');
+        projects = JSON.parse(retrievedData);
+        updateProjectsList(projects);
+        updateTodoList(findActiveProject(projects).items);
+    } else {
+        let exampleProject = createNewProject('Example Todo List');
+        projects.push(exampleProject);
+        exampleProject.isActive = true;
+        let exampleProject2 = createNewProject('Example Todo List Number 2');
+        projects.push(exampleProject2);
+        updateProjectsList(projects);
+        updateStorage();
+    }
+}
+
+let updateStorage = () => {
+    localStorage.setItem('projects', JSON.stringify(projects));
+}
+
 
 
 // listeners
@@ -60,10 +84,13 @@ projectsList.addEventListener('click', (event) => {
         updateTodoList(items);
         clearActiveProjectStyle();
         td.classList.add('active-project');
+        updateStorage();
     }
     if (target.classList.contains('list-delete-button')) {
-        deleteTodo(target, projects);
+        removeItem(target, projects);
         updateProjectsList(projects);
+        updateStorage();
+        updateTodoList(findActiveProject(projects).items);
     }
 
 })
@@ -75,27 +102,9 @@ currentList.addEventListener('click', (event) => {
 
     if (!target.classList.contains('list-item-delete-button')) return;
 
-    deleteTodo(target, items);
+    removeItem(target, items);
     updateTodoList(items);
 })
 
-//delete project
-
-projectsList.addEventListener('click', (event) => {
-    let target = event.target;
-    if (!target.classList.contains('lists')) return;
-
-
-})
-
-let examples = () => {
-    let exampleProject = createNewProject('Example Todo List');
-    projects.push(exampleProject);
-    exampleProject.isActive = true;
-    let exampleProject2 = createNewProject('Example Todo List Number 2');
-    projects.push(exampleProject2);
-    updateProjectsList(projects);
-    console.log(projects);
-}
-
-examples();
+loadStorage();
+console.log(projects);

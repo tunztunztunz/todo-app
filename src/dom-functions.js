@@ -1,6 +1,7 @@
 import {
     findActiveProject,
-    activateProject
+    activateProject,
+    checkForActiveProject
 } from "./helper-functions";
 
 import {
@@ -11,6 +12,8 @@ let currentList = document.querySelector('.current-list');
 let projectsList = document.querySelector('.lists');
 
 let renderTodoList = (items) => {
+
+
 
     for (let i = 0; i < items.length; i++) {
 
@@ -25,7 +28,8 @@ let renderTodoList = (items) => {
         deleteButton.id = items[i].id;
         newListItem.appendChild(deleteButton);
 
-        description.textContent = items[i].getTask();
+        console.log(items[i]);
+        description.textContent = items[i].task;
         newListItem.appendChild(description);
 
         newListItem.classList.add('list-item');
@@ -46,20 +50,22 @@ let updateTodoList = (items) => {
 
 let renderProjectsList = (projects) => {
 
+    console.log(projects);
 
     for (let i = 0; i < projects.length; i++) {
         let newProject = document.createElement('li');
         let projectName = document.createElement('span');
         let deleteButton = document.createElement('span');
 
-
-
         projects[i].id = i;
 
         let activeProject = findActiveProject(projects);
-        console.log('activeProject: ' + activeProject.id);
 
 
+        if (activeProject === undefined) {
+            checkForActiveProject(projects);
+            activeProject = projects[0];
+        }
 
         projectName.textContent = projects[i].name;
         newProject.appendChild(projectName);
@@ -71,11 +77,10 @@ let renderProjectsList = (projects) => {
 
         newProject.classList.add('list')
         newProject.id = projects[i].id;
-        console.log('newProject ' + newProject.id);
         projectsList.appendChild(newProject);
 
-        if (newProject.id === activeProject.id) {
-            alert('found a match');
+        if (Number(newProject.id) === activeProject.id) {
+            newProject.classList.add('active-project');
         }
     }
 }
