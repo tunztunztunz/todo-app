@@ -1,6 +1,8 @@
 import {
     updateTodoList,
-    updateProjectsList
+    updateProjectsList,
+    toggleHide,
+    togglePopup
 } from './dom-functions.js';
 
 import {
@@ -15,31 +17,51 @@ import {
     activateProject,
     findActiveProject,
     clearActiveProjectStyle,
-    removeItem
+    removeItem,
+    checkForActiveProject
 
 } from './helper-functions.js';
 
 let projects = [];
 let currentList = document.querySelector('.current-list');
-let addTodoButton = document.querySelector('.add-list-item-button');
+let todoExpandButton = document.querySelector('.add-list-item-button');
+let taskInput = document.querySelector('#task-input');
+let addTodoButton = document.querySelector('.add-todo-button');
+let cancelTodoButton = document.querySelector('.cancel-add-todo')
 let addProjectButton = document.querySelector('.add-project-button');
+let cancelProjectButton = document.querySelector('.project-cancel-button');
 let projectsList = document.querySelector('.lists');
 
+//Set default date to current date
+
+
+let checkForm = () => {
+    let input = taskInput.value;
+    let cansubmit = (input.length > 0);
+    addTodoButton.disabled = !cansubmit;
+    console.log(taskInput);
+}
+
 let addNewTodo = () => {
-    let items = findActiveProject(projects).items;
-    let taskInput = document.querySelector('#task-input');
-    let newTodo = createTodo(taskInput.value);
+    let activeProject = findActiveProject(projects);
+    let date = document.querySelector('#todo-date').value;
 
-    items.push(newTodo);
+    if (taskInput.value === '') return;
+
+    let newTodo = createTodo(taskInput.value, date);
+
+    activeProject.items.push(newTodo);
     taskInput.value = '';
-    updateTodoList(items);
-
+    updateTodoList(activeProject);
     updateStorage();
 }
 
 let addNewProject = () => {
     let projectNameIput = document.querySelector('#project-input');
     let newProject = createNewProject(projectNameIput.value);
+
+    if (projectNameIput === '') return
+
     projects.push(newProject);
     updateProjectsList(projects);
     updateStorage();
@@ -50,13 +72,11 @@ let loadStorage = () => {
         let retrievedData = localStorage.getItem('projects');
         projects = JSON.parse(retrievedData);
         updateProjectsList(projects);
-        updateTodoList(findActiveProject(projects).items);
+        updateTodoList(findActiveProject(projects));
     } else {
-        let exampleProject = createNewProject('Example Todo List');
-        projects.push(exampleProject);
-        exampleProject.isActive = true;
-        let exampleProject2 = createNewProject('Example Todo List Number 2');
-        projects.push(exampleProject2);
+        let defaultProject = createNewProject('Default');
+        projects.push(defaultProject);
+        defaultProject.isActive = true;
         updateProjectsList(projects);
         updateStorage();
     }
@@ -67,44 +87,74 @@ let updateStorage = () => {
 }
 
 
-
 // listeners
 
-addTodoButton.addEventListener('click', addNewTodo)
-addProjectButton.addEventListener('click', addNewProject)
+todoExpandButton.addEventListener('click', (e) => {
+    //Sets the date field on HTML element to current date
+    document.getElementById('todo-date').valueAsDate = new Date();
+    toggleHide();
+    checkForm();
+})
+
+addTodoButton.addEventListener('click', (e) => {
+    e.preventDefault();
+    addNewTodo();
+    toggleHide();
+})
+
+taskInput.addEventListener('keyup', checkForm);
+
+cancelTodoButton.addEventListener('click', () => {
+    toggleHide();
+})
+
+addProjectButton.addEventListener('click', () => {
+    togglePopup();
+})
+
+document.querySelector('form').addEventListener('submit', (e) => {
+    togglePopup();
+    e.preventDefault();
+    addNewProject();
+    e.target.reset();
+
+})
+
+cancelProjectButton.addEventListener('click', () => {
+    togglePopup();
+})
 
 //change active project or delete project
 
 projectsList.addEventListener('click', (event) => {
-    let td = event.target.closest('.list');
     let target = event.target;
-    if (td.classList.contains('list')) {
-        activateProject(td, projects);
-        let items = findActiveProject(projects).items;
-        updateTodoList(items);
+    if (target.classList.contains('project-name')) {
+        activateProject(target.parentNode.id, projects);
+        let activeProject = findActiveProject(projects);
+        updateTodoList(activeProject);
         clearActiveProjectStyle();
-        td.classList.add('active-project');
+        target.parentNode.classList.add('active-project');
         updateStorage();
     }
     if (target.classList.contains('list-delete-button')) {
         removeItem(target, projects);
         updateProjectsList(projects);
         updateStorage();
-        updateTodoList(findActiveProject(projects).items);
+        updateTodoList(findActiveProject(projects));
     }
-
 })
+
 
 //delete todo
 currentList.addEventListener('click', (event) => {
     let target = event.target;
-    let items = findActiveProject(projects).items;
+    let activeProject = findActiveProject(projects);
 
     if (!target.classList.contains('list-item-delete-button')) return;
 
-    removeItem(target, items);
-    updateTodoList(items);
+    removeItem(target, activeProject.items);
+    updateTodoList(activeProject);
+    updateStorage();
 })
 
 loadStorage();
-console.log(projects);

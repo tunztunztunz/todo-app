@@ -10,6 +10,19 @@
 
 <body>
 
+    <div class="popup-background hide">
+        <form class="new-project-form">
+            <h2>Add project</h2>
+            <label for="project-input">Project Title:</label>
+            <input type="text" name="project-input" id="project-input" maxlength="20" placeholder="20 character max">
+            <p id="warning"></p>
+            <div>
+                <button class="project-submit-button">Submit</button>
+                <button class="project-cancel-button" type="reset" value="Reset">Cancel</button>
+            </div>
+        </form>
+    </div>
+
     <div class="content">
 
         <div class="lists-div">
@@ -17,25 +30,30 @@
 
             </ul>
             <span class="add-project-button">+</span>
-            <label for="project-input">Name your project</label>
-            <input type="text" name="project-input" id="project-input">
-
-
 
         </div>
-
 
         <div class="current-list-display">
             <div class="list-content">
                 <div class="list-header-div">
-                    <h2>Example List</h2>
-                    <span class="add-list-item-button">+</span>
-                    <label for="task-input">What do you need todo?</label>
-                    <input type="text" name="task-input" id="task-input">
+
                 </div>
                 <ul class="current-list">
 
                 </ul>
+                <span class="add-list-item-button">+</span>
+                <div class="add-todo-div hide">
+                    <form action="">
+                        <div class="todo-input-fields ">
+                            <input type="text" name="task-input" id="task-input">
+                            <input type="date" name="date" id="todo-date">
+                        </div>
+                        <div class="add-todo-submit-cancel">
+                            <button class="add-todo-button" disabled="disabled">Add Task</button>
+                            <button class="cancel-add-todo" type="reset">Cancel</button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>

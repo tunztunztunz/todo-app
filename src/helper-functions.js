@@ -2,11 +2,7 @@ let activateProject = (event, array) => {
     array.forEach((e) => {
         e.isActive = false;
     })
-    if (event.classList.contains('list')) {
-        array[event.id].isActive = true;
-    } else {
-        array[event].isActive = true;
-    }
+    array[event].isActive = true;
 }
 
 let clearActiveProjectStyle = () => {
@@ -26,8 +22,6 @@ let checkForActiveProject = (array) => {
 }
 
 let removeItem = (event, array) => {
-    console.log('event.id');
-    console.log(event.id);
     array.splice(event.id, 1);
 }
 

@@ -1,5 +1,6 @@
-let createTodo = (newTask) => {
+let createTodo = (newTask, newDate) => {
     let task = newTask;
+    let date = newDate;
     let id;
     let priority = 'low';
     let getTask = () => {
@@ -10,12 +11,11 @@ let createTodo = (newTask) => {
         getTask,
         id,
         task,
+        date,
         priority
     }
 }
 
-
-
 export {
-    createTodo,
+    createTodo
 }
